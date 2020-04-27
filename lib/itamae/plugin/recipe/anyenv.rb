@@ -56,6 +56,7 @@ def install_envs(attributes)
   attributes[:install_versions].each do |envs|
     envs.each do |env, vers|
       install_env(env)
+      create_default_packages if env == 'nodenv'
 
       vers.each do |ver|
         install_env_version(env, ver)
@@ -119,5 +120,14 @@ def init_anyenv
     user username if username
     command exec
     not_if is_exec
+  end
+end
+
+def create_default_packages
+  root_path = @root_path
+  username = @username
+  file "#{root_path}/envs/nodenv/default-packages" do
+    content ""
+    owner username if username
   end
 end
